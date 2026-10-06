@@ -27,4 +27,3 @@ class TitleScreen:
         members_text.set_text(
             "Mahmoud Soufi, Tamas Dagany, Khaled Rukaia, Erik Fröjdh, Kith Ssekabira")
         members_text.set_width(350)
-        members_text.set_long_mode(lv.LABEL_LONG.WRAP)
