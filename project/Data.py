@@ -1,4 +1,4 @@
-
+# dataclasses and typing is missing from micropython, so in runtime mock the imported stuff
 TYPE_CHECKING=False
 if TYPE_CHECKING:
     from dataclasses import dataclass
