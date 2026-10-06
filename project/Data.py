@@ -15,7 +15,6 @@ else:
         return type_
 
 from datetime import datetime
-from typing import NewType
 import requests # urequests for micropython
 import json
 
