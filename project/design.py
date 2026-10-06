@@ -91,24 +91,27 @@ class DepartureScreen:
         # Unsure if the code fits the ES32 screen resolution, if not some values need to be ajusted
         # Unsure how the data system works so temporary data is used
 
-        #current_stop_name = data.stop_get_name(settings.get_current_stop())
+        current_stop_id = settings.get_current_stop()
+        current_stop_name = data.stop_get_name(current_stop_id)
+        current_transport_mode = settings.get_current_transport_mode()
+
+        departure_info = data.stop_get_departures_info(current_stop_id)
+
+
         current_stop_label = lv.label(tile)
-        current_stop_label.set_text("current_stop_name")
+        current_stop_label.set_text(current_stop_name)
         current_stop_label.align(lv.ALIGN.TOP_MID,0,20)
 
-
-        #transport_mode = settings.get_current_transport_mode()
         transport_mode_label = lv.label(tile)
-        transport_mode_label.set_text("current_transport_mode")
+        transport_mode_label.set_text(current_transport_mode)
         transport_mode_label.align(lv.ALIGN.TOP_MID,0,45)
 
         list1 = lv.list(tile)
         list1.set_size(lv.pct(100), lv.pct(60))
         list1.align(lv.ALIGN.BOTTOM_MID,0,0)
 
-        #temporary data
-        for n in range(0,20):
-            list1.add_text("12:31 - Destination - Line - Transport mode")
+        for departure_info in data.stop_get_departures_info():
+            list1.add_text(f"{departure_info.departure_time} - {departure_info.stop_get_name()} - {departure_info.line} - {departure_info.transport_mode}")
 
 
 
