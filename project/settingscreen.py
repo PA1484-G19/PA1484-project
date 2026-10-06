@@ -1,4 +1,3 @@
-import display_driver
 import lvgl as lv
  
 Button = getattr(lv, "button", None) or lv.btn
