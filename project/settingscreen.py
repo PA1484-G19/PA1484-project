@@ -56,14 +56,14 @@ class SettingsScreen:
  
     def _sync_dropdowns(self):
         """Set the dropdown selections so they match the current settings."""
-        if self.settings.stop in self.STOPS:
-            self.stop_dropdown.set_selected(self.STOPS.index(self.settings.stop))
+        if self.settings.get_current_stop() in self.STOPS:
+            self.stop_dropdown.set_selected(self.STOPS.index(self.settings.get_current_stop()))
  
-        if self.settings.mode is None:
+        if self.settings.get_current_transport_mode() is None:
             self.transport_dropdown.set_selected(self.TRANSPORT_MODES.index("All"))
-        elif self.settings.mode in self.TRANSPORT_MODES:
+        elif self.settings.get_current_transport_mode() in self.TRANSPORT_MODES:
             self.transport_dropdown.set_selected(
-                self.TRANSPORT_MODES.index(self.settings.mode))
+                self.TRANSPORT_MODES.index(self.settings.get_current_transport_mode()))
  
     def _on_stop_changed(self, event):
         idx = self.stop_dropdown.get_selected()
