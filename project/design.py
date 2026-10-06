@@ -1,14 +1,16 @@
-from collections.abc import Callable
-from dataclasses import dataclass
-from typing import NewType
-from datetime import datetime
-
-#Unsure if the import should be here
 import lvgl as lv
 
+# Type-only imports: MicroPython ignores annotations, so these are never run on the device
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from lvgl import obj as lv_obj_t
+    from settings import Settings
+    from data import Data
+
+
 class TitleScreen:
-    def __init__(self, tile: lv_obj_t):
-        # Unsure if the code fits the ESP32 screen resolution, if not some values need to be ajusted
+    def __init__(self, tile: "lv_obj_t"):
+        # If this doesn't fit the ESP32 screen resolution, adjust the values
 
         project_name_label = lv.label(tile)
         project_name_label.set_text("Project name: Transit go pro")
@@ -24,38 +26,61 @@ class TitleScreen:
 
         members_text = lv.label(tile)
         members_text.align(lv.ALIGN.CENTER, 0, 10)
-        members_text.set_text("Mahmoud Soufi, Tamas Dagany, Khaled Rukaia , Erik Fröjdh , Kith Ssekabira")
+        members_text.set_text(
+            "Mahmoud Soufi, Tamas Dagany, Khaled Rukaia, Erik Fröjdh, Kith Ssekabira")
         members_text.set_width(350)
         members_text.set_long_mode(lv.LABEL_LONG.WRAP)
 
 
 class DepartureScreen:
-    def __init__(self, tile: lv_obj_t, settings: Settings, data: Data):
-        # Unsure if the code fits the ES32 screen resolution, if not some values need to be ajusted
-        # Unsure how the data system works so temporary data is used
+    def __init__(self, tile: "lv_obj_t", settings: "Settings", data: "Data"):
+        self.settings = settings
+        self.data = data
 
-        current_stop_id = settings.get_current_stop()
-        current_stop_name = data.stop_get_name(current_stop_id)
-        current_transport_mode = settings.get_current_transport_mode()
+        self.current_stop_label = lv.label(tile)
+        self.current_stop_label.align(lv.ALIGN.TOP_MID, 0, 20)
 
-        departure_info = data.stop_get_departures_info(current_stop_id)
+        self.transport_mode_label = lv.label(tile)
+        self.transport_mode_label.align(lv.ALIGN.TOP_MID, 0, 45)
 
+        self.departure_list = lv.list(tile)
+        self.departure_list.set_size(lv.pct(100), lv.pct(60))
+        self.departure_list.align(lv.ALIGN.BOTTOM_MID, 0, 0)
 
-        current_stop_label = lv.label(tile)
-        current_stop_label.set_text(current_stop_name)
-        current_stop_label.align(lv.ALIGN.TOP_MID,0,20)
-
-        transport_mode_label = lv.label(tile)
-        transport_mode_label.set_text(current_transport_mode)
-        transport_mode_label.align(lv.ALIGN.TOP_MID,0,45)
-
-        list1 = lv.list(tile)
-        list1.set_size(lv.pct(100), lv.pct(60))
-        list1.align(lv.ALIGN.BOTTOM_MID,0,0)
-
-        for departure_info in data.stop_get_departures_info(current_stop_id):
-            list1.add_text(f"{departure_info.departure_time} - {departure_info.stop_get_name(departure_info.destination)} - {departure_info.line} - {departure_info.transport_mode}")
-
+        self.settings_has_changed()
 
     def settings_has_changed(self):
-        ...
+        """Re-read the settings and redraw the screen. Call this whenever
+        the stop or transport mode changes."""
+        stop_id = self.settings.get_current_stop()
+        mode = self.settings.get_current_transport_mode()
+
+        self.departure_list.clean()
+
+        # Fresh start: no stop selected yet
+        if stop_id is None:
+            self.current_stop_label.set_text("No stop selected")
+            self.transport_mode_label.set_text("")
+            self.departure_list.add_text("Select a stop in Settings")
+            return
+
+        self.current_stop_label.set_text(self.data.stop_get_name(stop_id))
+        self.transport_mode_label.set_text(mode if mode else "All")
+
+        departures = self.data.stop_get_departures_info(stop_id)
+
+        # No mode selected (or "All") means don't filter
+        if mode and mode != "All":
+            departures = [d for d in departures if d.transport_mode == mode]
+
+        if not departures:
+            self.departure_list.add_text("No departures")
+            return
+
+        for dep in departures:
+            time_str = "{:02d}:{:02d}".format(
+                dep.departure_time.hour, dep.departure_time.minute)
+            destination = self.data.stop_get_name(dep.destination)
+            self.departure_list.add_text(
+                "{} - {} - {} - {}".format(
+                    time_str, destination, dep.line, dep.transport_mode))
