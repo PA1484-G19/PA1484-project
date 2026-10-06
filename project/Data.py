@@ -1,6 +1,14 @@
-from collections.abc import Callable
-from dataclasses import dataclass
-from typing import NewType
+# dataclasses and typing is missing from micropython, so in runtime mock the imported stuff
+TYPE_CHECKING=False
+if TYPE_CHECKING:
+    from dataclasses import dataclass
+    from typing import NewType
+else:
+    def dataclass(cls):
+        return cls
+    def NewType(_,type_):
+        return type_
+
 from datetime import datetime
 import requests # urequests for micropython
 import json
