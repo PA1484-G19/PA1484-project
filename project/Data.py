@@ -3,6 +3,7 @@ TYPE_CHECKING=False
 if TYPE_CHECKING:
     from dataclasses import dataclass
     from typing import NewType
+    from datetime import datetime
 else:
     def dataclass(cls):
         def f(self, *args):
@@ -13,8 +14,14 @@ else:
         return f
     def NewType(_,type_):
         return type_
+    @dataclass
+    class datetime:
+        year: int
+        month: int
+        day: int
+        hour: int
+        minute: int
 
-from datetime import datetime
 import requests # urequests for micropython
 import json
 
