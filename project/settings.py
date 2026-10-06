@@ -3,8 +3,13 @@
 import json
 
 
-# Annotations naming Data/Callable are strings, so neither typing (missing in
-# MicroPython) nor the data module (avoids circular imports) has to be imported.
+# Get type checking without running the import: (typing is missing from MicroPython and avoids possible
+# circular imports)
+TYPE_CHECKING=False
+if TYPE_CHECKING:
+    from typing import Callable
+    from data import Data
+
 class Settings:
     """Holds the current settings and calls a callback whenever they change."""
 
