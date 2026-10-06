@@ -31,7 +31,7 @@ class SettingsScreen:
         stop_label = lv.label(self.container)
         stop_label.set_text("Select Stop:")
         self.stop_dropdown = lv.dropdown(self.container)
-        self.stop_dropdown.set_options("\n".join(self.STOPS))
+        self.stop_dropdown.set_options("\n".join(map(data.stop_get_name,self.STOPS)))
         self.stop_dropdown.add_event_cb(
             self._on_stop_changed, lv.EVENT.VALUE_CHANGED, None)
  
