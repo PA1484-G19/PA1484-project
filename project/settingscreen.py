@@ -1,53 +1,23 @@
 import display_driver
 import lvgl as lv
 
-class MockSettings:
-    def __init__(self):
-        self.stop = "Campus Grasvik"
-        self.mode = "All"
-
-    def set_current_stop(self, stop):
-        self.stop = stop
-        print("Selected stop:", stop)
-
-    def set_current_transport_mode(self, mode):
-        self.mode = mode
-        print("Selected transport mode:", mode)
-
-    def to_savable_format(self):
-        return "{};{}".format(self.stop, self.mode).encode()
-
-    def from_savable_format(self, data):
-        text = data.decode()
-        self.stop, self.mode = text.split(";")
-        print("Restored from saved data:", text)
-
-
-class MockSaveSystem:
-    def __init__(self):
-        self.saved_data = b"Campus Grasvik;All"
-
-    def save(self, data):
-        self.saved_data = data
-        print("Saved to memory:", data)
-
-    def load(self):
-        return self.saved_data
-
-
 Button = getattr(lv, "button", None) or lv.btn
 load_screen = getattr(lv, "screen_load", None) or lv.scr_load
 
 
 class SettingsScreen:
-    STOPS = ["Campus Grasvik", "Karlskrona Central Station", "Bergasa"]
-    TRANSPORT_MODES = ["All", "Bus", "Train", "Ferry"]
-
     def __init__(self, tile, data, settings, savesystem):
         self.tile = tile
         self.data = data
         self.settings = settings
         self.savesystem = savesystem
+
+        self.STOPS = data.get_stops()
+        self.TRANSPORT_MODES = data.get_transport_modes()
+
+        saved = self.savesystem.load()
+        if saved:
+            self.settings.from_savable_format(saved)
 
         self.container = lv.obj(self.tile)
         self.container.set_size(lv.pct(90), lv.pct(90))
@@ -57,7 +27,6 @@ class SettingsScreen:
         title = lv.label(self.container)
         title.set_text("Settings")
 
-        
         stop_label = lv.label(self.container)
         stop_label.set_text("Select Stop:")
         self.stop_dropdown = lv.dropdown(self.container)
@@ -65,7 +34,6 @@ class SettingsScreen:
         self.stop_dropdown.add_event_cb(
             self._on_stop_changed, lv.EVENT.VALUE_CHANGED, None)
 
-        
         transport_label = lv.label(self.container)
         transport_label.set_text("Select Transport:")
         self.transport_dropdown = lv.dropdown(self.container)
@@ -73,7 +41,6 @@ class SettingsScreen:
         self.transport_dropdown.add_event_cb(
             self._on_transport_changed, lv.EVENT.VALUE_CHANGED, None)
 
-        
         self.save_btn = Button(self.container)
         lv.label(self.save_btn).set_text("Save as Default")
         self.save_btn.add_event_cb(
@@ -90,7 +57,10 @@ class SettingsScreen:
         """Set the dropdown selections so they match the current settings."""
         if self.settings.stop in self.STOPS:
             self.stop_dropdown.set_selected(self.STOPS.index(self.settings.stop))
-        if self.settings.mode in self.TRANSPORT_MODES:
+        
+        if self.settings.mode is None:
+            self.transport_dropdown.set_selected(self.TRANSPORT_MODES.index("All"))
+        elif self.settings.mode in self.TRANSPORT_MODES:
             self.transport_dropdown.set_selected(
                 self.TRANSPORT_MODES.index(self.settings.mode))
 
@@ -100,7 +70,11 @@ class SettingsScreen:
 
     def _on_transport_changed(self, event):
         idx = self.transport_dropdown.get_selected()
-        self.settings.set_current_transport_mode(self.TRANSPORT_MODES[idx])
+        selected = self.TRANSPORT_MODES[idx]
+        if selected == "All":
+            self.settings.set_current_transport_mode(None)
+        else:
+            self.settings.set_current_transport_mode(selected)
 
     def _on_save_clicked(self, event):
         self.savesystem.save(self.settings.to_savable_format())
@@ -110,4 +84,3 @@ class SettingsScreen:
         if saved:
             self.settings.from_savable_format(saved)
             self._sync_dropdowns()
-
