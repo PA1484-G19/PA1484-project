@@ -124,14 +124,3 @@ class Data:
     def get_transport_modes(self) -> tuple[TransportMode,...]:
         return tuple(self.TransportMode("Bus"), self.TransportMode("Train"),)
 
-d = Data()
-print(d.get_stops())
-print(d.stop_get_name(Data.StopID(740032188)))
-'''a = requests.get("https://realtime-api.trafiklab.se/v1/departures/740000020?key=724c9cc9a3774e6a874a24ae956ce251")
-data = a.json()
-departures = data["departures"]
-#for departure in departures:
-    #for 
-print(departures[1]["route"][ "destination"])'''
-print(d.stop_get_departures_info(Data.StopID(740000663))[0].departure_time)
-
