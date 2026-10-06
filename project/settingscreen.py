@@ -12,6 +12,9 @@ class SettingsScreen:
         self.settings = settings
         self.savesystem = savesystem
 
+        saved = self.savesystem.load()
+        if saved:
+            self.settings.from_savable_format(saved)
         self.STOPS = data.get_stops()
         self.TRANSPORT_MODES = data.get_transport_modes()
 
