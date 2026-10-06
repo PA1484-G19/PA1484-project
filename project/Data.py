@@ -133,5 +133,3 @@ class Data:
 
     def get_transport_modes(self) -> tuple[TransportMode,...]:
         return tuple(self.TransportMode("Bus"), self.TransportMode("Train"),)
-
-d = Data()
