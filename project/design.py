@@ -53,7 +53,7 @@ class DepartureScreen:
         list1.set_size(lv.pct(100), lv.pct(60))
         list1.align(lv.ALIGN.BOTTOM_MID,0,0)
 
-        for departure_info in data.stop_get_departures_info():
+        for departure_info in data.stop_get_departures_info(current_stop_id):
             list1.add_text(f"{departure_info.departure_time} - {departure_info.stop_get_name(departure_info.destination)} - {departure_info.line} - {departure_info.transport_mode}")
 
 
