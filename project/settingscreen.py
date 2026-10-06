@@ -13,10 +13,10 @@ class SettingsScreen:
         self.savesystem = savesystem
  
         self.STOPS = data.get_stops()
-        # "All" is a special case that is not part of data.get_transport_modes()
+        
         self.TRANSPORT_MODES = list(data.get_transport_modes()) + ["All"]
  
-        # Restore the saved defaults on startup
+        
         saved = self.savesystem.load()
         if saved:
             self.settings.from_savable_format(saved)
