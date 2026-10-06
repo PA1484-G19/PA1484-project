@@ -6,12 +6,7 @@ if TYPE_CHECKING:
     from datetime import datetime
 else:
     def dataclass(cls):
-        def f(self, *args):
-            obj=cls()
-            for annotation,arg in zip(cls.__annotations__,args,strict=True):
-                setattr(obj,annotation,arg) 
-            return obj
-        return f
+        return cls
     def NewType(_,type_):
         return type_
     @dataclass
@@ -21,6 +16,12 @@ else:
         day: int
         hour: int
         minute: int
+        def __init__(self, year, month, day, hour, minute):
+            self.year=year
+            self.month=month
+            self.day=day
+            self.hour=hour
+            self.minute=minute
 
 import requests # urequests for micropython
 import json
@@ -36,6 +37,12 @@ class Data:
         destination: Data.StopID
         transport_mode: Data.TransportMode
         departure_status: str
+        def __init__(self,departure_time,line,destination,transport_mode,departure_status):
+            self.departure_time=departure_time
+            self.line=line
+            self.destination=destination
+            self.transport_mode=transport_mode
+            self.departure_status=departure_status
 
     campus_gräsvik = StopID(740032188)
     karlskrona_centralstation = StopID(740000230)
