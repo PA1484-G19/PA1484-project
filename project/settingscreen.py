@@ -111,10 +111,3 @@ class SettingsScreen:
             self.settings.from_savable_format(saved)
             self._sync_dropdowns()
 
-
-
-scr = lv.obj()
-settings_obj = MockSettings()
-save_obj = MockSaveSystem()
-screen = SettingsScreen(scr, None, settings_obj, save_obj)
-load_screen(scr)
