@@ -19,7 +19,7 @@ class TitleScreen:
         version_label.align(lv.ALIGN.TOP_LEFT, 50, 80)
 
         group_label = lv.label(tile)
-        group_label.set_text("Group members:")
+        group_label.set_text("Group number: 19 & members:")
         group_label.align(lv.ALIGN.CENTER, 0, -20)
 
         members_text = lv.label(tile)
