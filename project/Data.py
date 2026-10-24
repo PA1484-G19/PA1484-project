@@ -151,4 +151,4 @@ class Data:
         return self.departures_dict.get(current_stop)
 
     def get_transport_modes(self) -> tuple[TransportMode,...]:
-        return (self.TransportMode("Bus"), self.TransportMode("Train"),)
+        return (self.TransportMode("Bus"), self.TransportMode("Train"), self.TransportMode("Ferry"),)
