@@ -65,3 +65,8 @@ class Fetcher:
             self.net_tranport_mode_to_transport_mode[i['route']['transport_mode']],
             'Canceled' if i['canceled'] else 'Delayed' if i['delay']>60 else 'On time',
             ) for i in out['departures'])))
+
+    def need_refetch(self):
+        stop=self.get_current_stop()
+        return (stop not in self.last_fetch
+                or (time.ticks_ms()-self.last_fetch[stop])>=60_000)
