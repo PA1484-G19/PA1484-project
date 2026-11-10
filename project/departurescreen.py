@@ -25,6 +25,13 @@ class DepartureScreen:
 
         self.settings_has_changed()
 
+        #Creates a timer that calls "refresh_timer() every 60 seconds"
+        lv.timer_create(self.refresh_timer, 60_000, None)
+
+    def refresh_timer(self,timer):
+        """Updates the screen every 60 seconds by calling settings_has_changed()"""
+        self.settings_has_changed()
+
     def settings_has_changed(self):
         """Re-read the settings and redraw the screen. Call this whenever
         the stop or transport mode changes."""
