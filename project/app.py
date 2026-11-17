@@ -7,10 +7,16 @@ from departurescreen import DepartureScreen
 from titlescreen import TitleScreen
 from settingscreen import SettingsScreen
 from Data import Data
+from fetcher import Fetcher
 
 class App:
     def __init__(self):
         self.display, self.touch, self.handler = start_board()
+
+        self.fetcher=Fetcher(lambda:self.settings.get_current_stop(),
+                             lambda stop,data:(self.data.set_departures_for_stop(stop,data),
+                                               self.departure_screen.settings_has_changed()))
+        self.fetcher.connect()
 
         self.tileview = lv.tileview(lv.screen_active())
         self.tileview.set_size(600, 450)
@@ -22,7 +28,9 @@ class App:
 
         self.data=Data()
         self.savesystem=SaveSystem()
-        self.settings=Settings(lambda:self.departure_screen.settings_has_changed())
+        self.settings=Settings(lambda stop: self.departure_screen.settings_has_changed()
+                               if stop in self.fetcher.last_fetch else
+                               self.fetcher.refetch())
 
         self.title_screen=TitleScreen(self.tile1)
         self.departure_screen=DepartureScreen(self.tile2,self.settings,self.data)

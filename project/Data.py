@@ -27,24 +27,24 @@ import requests # urequests for micropython
 import json
 import karlskrona_stops
 
+TransportMode = NewType('TransportMode', str)
+StopID = karlskrona_stops.StopID
+
+@dataclass
+class DepartureInfo:
+    departure_time: datetime
+    line: str
+    destination: str
+    transport_mode: Data.TransportMode
+    departure_status: str
+    def __init__(self,departure_time,line,destination,transport_mode,departure_status):
+        self.departure_time=departure_time
+        self.line=line
+        self.destination=destination
+        self.transport_mode=transport_mode
+        self.departure_status=departure_status
+
 class Data:
-    StopID = karlskrona_stops.StopID
-    TransportMode = NewType('TransportMode', str)
-
-    @dataclass
-    class DepartureInfo:
-        departure_time: datetime
-        line: str
-        destination: Data.StopID
-        transport_mode: Data.TransportMode
-        departure_status: str
-        def __init__(self,departure_time,line,destination,transport_mode,departure_status):
-            self.departure_time=departure_time
-            self.line=line
-            self.destination=destination
-            self.transport_mode=transport_mode
-            self.departure_status=departure_status
-
     stops_dict = karlskrona_stops.stops
 
     def __init__(self):
@@ -53,7 +53,7 @@ class Data:
             self.departures_dict[_id]=[]
 
     def get_stops(self) -> tuple[StopID,...]:
-        return tuple(self.StopID(stop_id) for stop_id in Data.stops_dict.keys())
+        return tuple(StopID(stop_id) for stop_id in Data.stops_dict.keys())
 
     def stop_get_name(self, stop_id: StopID) -> str:
         return self.stops_dict.get(stop_id)
@@ -62,4 +62,7 @@ class Data:
         return self.departures_dict.get(current_stop)
 
     def get_transport_modes(self) -> tuple[TransportMode,...]:
-        return (self.TransportMode("Bus"), self.TransportMode("Train"), self.TransportMode("Ferry"),)
+        return (TransportMode("Bus"), TransportMode("Train"), TransportMode("Ferry"),)
+
+    def set_departures_for_stop(self,stop: StopID,departures: tuple[DepartureInfo,...]):
+        self.departures_dict[stop]=departures
