@@ -56,7 +56,6 @@ class DepartureScreen:
         for dep in departures:
             time_str = "{:02d}:{:02d}".format(
                 dep.departure_time.hour, dep.departure_time.minute)
-            destination = self.data.stop_get_name(dep.destination)
             self.departure_list.add_text(
                 "{} - {} - {} - {} - {}".format(
-                    time_str, destination, dep.line, dep.transport_mode, dep.departure_status))
+                    time_str, dep.destination, dep.line, dep.transport_mode, dep.departure_status))
