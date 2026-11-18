@@ -33,5 +33,5 @@ class App:
                                self.fetcher.refetch())
 
         self.title_screen=TitleScreen(self.tile1)
-        self.departure_screen=DepartureScreen(self.tile2,self.settings,self.data)
-        self.settings_screen=SettingsScreen(self.tile3,self.data,self.settings,self.savesystem)
+        self.departure_screen=DepartureScreen(self.tile2,self.settings,self.data,self.fetcher.refetch)
+        self.settings_screen=SettingsScreen(self.tile3,self.data,self.settings,self.savesystem,self.fetcher)

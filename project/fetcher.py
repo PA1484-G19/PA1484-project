@@ -50,6 +50,8 @@ class Fetcher:
 
     def refetch(self):
         stop=self.get_current_stop()
+        if stop is None or not self.station.isconnected():
+            return
         out=requests.get(url='https://realtime-api.trafiklab.se/v1/departures/%s?key=%s'%(stop,API_KEY)).text
         out=json.loads(out)
         if 'errorCode' in out:

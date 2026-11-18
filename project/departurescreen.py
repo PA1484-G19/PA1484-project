@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 
 class DepartureScreen:
-    def __init__(self, tile: lv_obj_t, settings: Settings, data: Data):
+    def __init__(self, tile: lv_obj_t, settings: Settings, data: Data, refresh):
         self.settings = settings
         self.data = data
 
@@ -22,6 +22,11 @@ class DepartureScreen:
         self.departure_list = lv.list(tile)
         self.departure_list.set_size(lv.pct(100), lv.pct(60))
         self.departure_list.align(lv.ALIGN.BOTTOM_MID, 0, 0)
+
+        self.refresh_btn = lv.button(tile)
+        lv.label(self.refresh_btn).set_text("Refresh")
+        self.refresh_btn.align(lv.ALIGN.TOP_RIGHT, -16, 16)
+        self.refresh_btn.add_event_cb(lambda event: refresh(), lv.EVENT.CLICKED, None)
 
         self.settings_has_changed()
 
