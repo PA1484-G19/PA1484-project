@@ -6,7 +6,7 @@ from settings import Settings
 from departurescreen import DepartureScreen
 from titlescreen import TitleScreen
 from settingscreen import SettingsScreen
-from Data import Data
+from data import Data
 from fetcher import Fetcher
 
 class App:

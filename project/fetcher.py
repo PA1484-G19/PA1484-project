@@ -4,7 +4,7 @@ from secrets import WIFI_SSID, WIFI_PASSWORD, API_KEY
 import requests # urequests for micropython
 import json
 import re
-from Data import TransportMode, DepartureInfo, datetime
+from data import TransportMode, DepartureInfo, datetime
 from debug_log import log
 TYPE_CHECKING=False
 if TYPE_CHECKING:
