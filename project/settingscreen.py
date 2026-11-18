@@ -1,15 +1,19 @@
 import lvgl as lv
+import time
  
 Button = getattr(lv, "button", None) or lv.btn
 load_screen = getattr(lv, "screen_load", None) or lv.scr_load
+
+STATUS_REFRESH_MS = 2000
  
  
 class SettingsScreen:
-    def __init__(self, tile, data, settings, savesystem):
+    def __init__(self, tile, data, settings, savesystem, fetcher):
         self.tile = tile
         self.data = data
         self.settings = settings
         self.savesystem = savesystem
+        self.fetcher = fetcher
  
         self.STOPS = data.get_stops()
         
@@ -51,8 +55,32 @@ class SettingsScreen:
         lv.label(self.reset_btn).set_text("Reset")
         self.reset_btn.add_event_cb(
             self._on_reset_clicked, lv.EVENT.CLICKED, None)
+
+        self.wifi_status_label = lv.label(self.container)
+        self.live_data_status_label = lv.label(self.container)
  
         self._sync_dropdowns()
+        self._update_status()
+
+        # LVGL 9 timer: calls _on_status_timer(timer) every STATUS_REFRESH_MS.
+        # Kept on self so the timer is not garbage collected.
+        self.status_timer = lv.timer_create(
+            self._on_status_timer, STATUS_REFRESH_MS, None)
+
+    def _update_status(self):
+        """Show the Wi-Fi state and how old the selected stop's live data is."""
+        status = self.fetcher.status()
+        self.wifi_status_label.set_text(
+            "Wi-Fi: Connected" if status.active else "Wi-Fi: Disconnected")
+
+        if status.last_fetch == -1:
+            self.live_data_status_label.set_text("Live data: No data yet")
+        else:
+            seconds = time.ticks_diff(time.ticks_ms(), status.last_fetch) // 1000
+            self.live_data_status_label.set_text("Live data: %d s ago" % seconds)
+
+    def _on_status_timer(self, timer):
+        self._update_status()
  
     def _sync_dropdowns(self):
         """Set the dropdown selections so they match the current settings."""
@@ -68,6 +96,7 @@ class SettingsScreen:
     def _on_stop_changed(self, event):
         idx = self.stop_dropdown.get_selected()
         self.settings.set_current_stop(self.STOPS[idx])
+        self._update_status()
  
     def _on_transport_changed(self, event):
         idx = self.transport_dropdown.get_selected()
@@ -85,3 +114,4 @@ class SettingsScreen:
         if saved:
             self.settings.from_savable_format(saved)
             self._sync_dropdowns()
+            self._update_status()
