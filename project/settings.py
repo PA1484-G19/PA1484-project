@@ -5,7 +5,7 @@ import json
 TYPE_CHECKING=False
 if TYPE_CHECKING:
     from typing import Callable
-    from data import Data
+    from data import StopID, TransportMode
 
 class Settings:
     """Holds the current settings and calls a callback whenever they change."""
@@ -15,16 +15,16 @@ class Settings:
         self._stop = None
         self._transport_mode = None
 
-    def set_current_stop(self, stop: "Data.StopID | None"):
+    def set_current_stop(self, stop: "StopID | None"):
         self._update(stop, self._transport_mode)
 
-    def get_current_stop(self) -> "Data.StopID | None":
+    def get_current_stop(self) -> "StopID | None":
         return self._stop
 
-    def set_current_transport_mode(self, transport: "Data.TransportMode | None"):
+    def set_current_transport_mode(self, transport: "TransportMode | None"):
         self._update(self._stop, transport)
 
-    def get_current_transport_mode(self) -> "Data.TransportMode | None":
+    def get_current_transport_mode(self) -> "TransportMode | None":
         return self._transport_mode
 
     def to_savable_format(self) -> bytes:

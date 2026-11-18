@@ -28,7 +28,7 @@ class DepartureInfo:
     departure_time: datetime
     line: str
     destination: str
-    transport_mode: Data.TransportMode
+    transport_mode: TransportMode
     departure_status: str
     def __init__(self,departure_time,line,destination,transport_mode,departure_status):
         self.departure_time=departure_time
