@@ -18,6 +18,9 @@ class App:
                                                self.departure_screen.settings_has_changed()))
         self.fetcher.connect()
 
+        lv.timer_create(lambda _: self.fetcher.refetch()
+                        if self.fetcher.need_refetch() else None, 2_000, None)
+
         self.tileview = lv.tileview(lv.screen_active())
         self.tileview.set_size(600, 450)
         self.tileview.set_scrollbar_mode(lv.SCROLLBAR_MODE.OFF)
@@ -28,8 +31,8 @@ class App:
 
         self.data=Data()
         self.savesystem=SaveSystem()
-        self.settings=Settings(lambda stop: self.departure_screen.settings_has_changed()
-                               if stop in self.fetcher.last_fetch else
+        self.settings=Settings(lambda: self.departure_screen.settings_has_changed()
+                               if not self.fetcher.need_refetch() else
                                self.fetcher.refetch())
 
         self.title_screen=TitleScreen(self.tile1)

@@ -55,4 +55,4 @@ class Settings:
         if stop != self._stop or transport != self._transport_mode:
             self._stop = stop
             self._transport_mode = transport
-            self._on_change(self._stop)
+            self._on_change()
