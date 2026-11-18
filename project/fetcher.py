@@ -54,7 +54,7 @@ class Fetcher:
             return
         self.last_fetch[stop]=time.ticks_ms()
         self.on_refetch(stop,tuple((DepartureInfo(
-            datetime(*(int(self.date_pattern.match(i['realtime']).group(j+1)) for j in range(5))),
+            (lambda match: datetime(*(int(match.group(j+1)) for j in range(5))))(self.date_pattern.match(i['realtime'])),
             i['route']['designation'],
             i['route']['destination']['name'],
             self.net_tranport_mode_to_transport_mode[i['route']['transport_mode']],
