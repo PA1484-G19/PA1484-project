@@ -1,12 +1,19 @@
 import lvgl as lv
 import time
+
+TYPE_CHECKING=False
+if TYPE_CHECKING:
+    from data import Data
+    from settings import Settings
+    from savesystem import SaveSystem
+    from fetcher import Fetcher
  
 Button = getattr(lv, "button", None) or lv.btn
 
 STATUS_REFRESH_MS = 2000
  
 class SettingsScreen:
-    def __init__(self, tile, data, settings, savesystem, fetcher):
+    def __init__(self, tile, data: Data, settings: Settings, savesystem: SaveSystem, fetcher: Fetcher):
         self.tile = tile
         self.data = data
         self.settings = settings
@@ -87,11 +94,12 @@ class SettingsScreen:
         elif stop is None:
             self.stop_dropdown.set_selected(0)  # Default to the first stop if none is set.
 
-        if self.settings.get_current_transport_mode() is None:
+        current_transport_mode=self.settings.get_current_transport_mode()
+        if current_transport_mode is None:
             self.transport_dropdown.set_selected(self.TRANSPORT_MODES.index("All"))
         elif self.settings.get_current_transport_mode() in self.TRANSPORT_MODES:
             self.transport_dropdown.set_selected(
-                self.TRANSPORT_MODES.index(self.settings.get_current_transport_mode()))
+                self.TRANSPORT_MODES.index(current_transport_mode))
  
     def _on_stop_changed(self, event):
         idx = self.stop_dropdown.get_selected()

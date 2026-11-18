@@ -8,7 +8,8 @@ from data import TransportMode, DepartureInfo, datetime
 from debug_log import log
 TYPE_CHECKING=False
 if TYPE_CHECKING:
-    from typing import Callable
+    from data import StopID
+    from typing import Callable, Any
 
 class Fetcher:
     net_tranport_mode_to_transport_mode={
@@ -26,7 +27,7 @@ class Fetcher:
             self.last_fetch=last_fetch
             self.active=active
 
-    def __init__(self,get_current_stop:Callable,on_refetch:Callable):
+    def __init__(self,get_current_stop:Callable[[],Any],on_refetch:Callable[[StopID,tuple[DepartureInfo,...]],Any]):
         self.last_fetch={}
         self.get_current_stop=get_current_stop
         self.on_refetch=on_refetch
@@ -61,7 +62,7 @@ class Fetcher:
             'Canceled' if i['canceled'] else 'Delayed' if i['delay']>60 else 'On time',
             ) for i in out['departures'])))
 
-    def need_refetch(self):
+    def need_refetch(self) -> bool:
         stop=self.get_current_stop()
         return (stop not in self.last_fetch
                 or (time.ticks_ms()-self.last_fetch[stop])>=60_000)

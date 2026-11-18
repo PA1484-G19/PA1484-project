@@ -1,13 +1,8 @@
 import lvgl as lv
 
-# Type-only imports: MicroPython ignores annotations, so these are never run on the device
-TYPE_CHECKING = False
-if TYPE_CHECKING:
-    from lvgl import obj as lv_obj_t
-
 
 class TitleScreen:
-    def __init__(self, tile: lv_obj_t):
+    def __init__(self, tile):
         # If this doesn't fit the ESP32 screen resolution, adjust the values
 
         project_name_label = lv.label(tile)

@@ -4,27 +4,27 @@ import json
 
 TYPE_CHECKING=False
 if TYPE_CHECKING:
-    from typing import Callable
+    from typing import Callable, Any
     from data import StopID, TransportMode
 
 class Settings:
     """Holds the current settings and calls a callback whenever they change."""
 
-    def __init__(self, to_be_called_on_settings_change: "Callable"):
+    def __init__(self, to_be_called_on_settings_change: Callable[[],Any]):
         self._on_change = to_be_called_on_settings_change
         self._stop = None
         self._transport_mode = None
 
-    def set_current_stop(self, stop: "StopID | None"):
+    def set_current_stop(self, stop: StopID | None):
         self._update(stop, self._transport_mode)
 
-    def get_current_stop(self) -> "StopID | None":
+    def get_current_stop(self) -> StopID | None:
         return self._stop
 
-    def set_current_transport_mode(self, transport: "TransportMode | None"):
+    def set_current_transport_mode(self, transport: TransportMode | None):
         self._update(self._stop, transport)
 
-    def get_current_transport_mode(self) -> "TransportMode | None":
+    def get_current_transport_mode(self) -> TransportMode | None:
         return self._transport_mode
 
     def to_savable_format(self) -> bytes:
@@ -47,7 +47,7 @@ class Settings:
                 (transport is None or type(transport) is str)):
             self._update(stop, transport)
 
-    def _update(self, stop, transport):
+    def _update(self, stop: StopID | None, transport: TransportMode | None):
         # Notify only on a real change, so screens are not refreshed needlessly.
         if stop != self._stop or transport != self._transport_mode:
             self._stop = stop
