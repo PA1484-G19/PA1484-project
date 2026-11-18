@@ -46,7 +46,7 @@ class Data:
             self.departures_dict[_id]=[]
 
     def get_stops(self) -> tuple[StopID,...]:
-        return tuple(StopID(stop_id) for stop_id in Data.stops_dict.keys())
+        return tuple(StopID(stop_id) for stop_id in self.stops_dict.keys())
 
     def stop_get_name(self, stop_id: StopID) -> str:
         return self.stops_dict.get(stop_id)
