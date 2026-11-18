@@ -1,0 +1,4 @@
+[analysis]
+replace-imports-with-any = ["lvgl", "time", "requests", "network", "sys"]
+[environment]
+extra-paths = ["./support/", "./project/"]
