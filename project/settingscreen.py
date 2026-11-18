@@ -2,10 +2,8 @@ import lvgl as lv
 import time
  
 Button = getattr(lv, "button", None) or lv.btn
-load_screen = getattr(lv, "screen_load", None) or lv.scr_load
 
 STATUS_REFRESH_MS = 2000
- 
  
 class SettingsScreen:
     def __init__(self, tile, data, settings, savesystem, fetcher):
@@ -16,7 +14,6 @@ class SettingsScreen:
         self.fetcher = fetcher
  
         self.STOPS = data.get_stops()
-        
         self.TRANSPORT_MODES = list(data.get_transport_modes()) + ["All"]
  
         
@@ -35,7 +32,7 @@ class SettingsScreen:
         stop_label = lv.label(self.container)
         stop_label.set_text("Select Stop:")
         self.stop_dropdown = lv.dropdown(self.container)
-        self.stop_dropdown.set_options("\n".join(map(data.stop_get_name,self.STOPS)))
+        self.stop_dropdown.set_options("\n".join(["Select a stop..."] + [self.data.stop_get_name(stop) for stop in self.STOPS]))
         self.stop_dropdown.add_event_cb(
             self._on_stop_changed, lv.EVENT.VALUE_CHANGED, None)
  
@@ -84,9 +81,12 @@ class SettingsScreen:
  
     def _sync_dropdowns(self):
         """Set the dropdown selections so they match the current settings."""
-        if self.settings.get_current_stop() in self.STOPS:
-            self.stop_dropdown.set_selected(self.STOPS.index(self.settings.get_current_stop()))
- 
+        stop = self.settings.get_current_stop()
+        if stop in self.STOPS:
+            self.stop_dropdown.set_selected(self.STOPS.index(stop) + 1)
+        elif stop is None:
+            self.stop_dropdown.set_selected(0)  # Default to the first stop if none is set.
+
         if self.settings.get_current_transport_mode() is None:
             self.transport_dropdown.set_selected(self.TRANSPORT_MODES.index("All"))
         elif self.settings.get_current_transport_mode() in self.TRANSPORT_MODES:
@@ -95,7 +95,9 @@ class SettingsScreen:
  
     def _on_stop_changed(self, event):
         idx = self.stop_dropdown.get_selected()
-        self.settings.set_current_stop(self.STOPS[idx])
+        if idx == 0:
+            return
+        self.settings.set_current_stop(self.STOPS[idx - 1])
         self._update_status()
  
     def _on_transport_changed(self, event):
