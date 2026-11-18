@@ -2,3 +2,12 @@
 replace-imports-with-any = ["lvgl", "time", "requests", "network", "sys"]
 [environment]
 extra-paths = ["./support/", "./project/"]
+[rules]
+missing-type-argument="warn"
+possibly-missing-attribute="warn"
+possibly-missing-import="warn"
+possibly-unresolved-reference="warn"
+redundant-condition-strict="warn"
+truthiness-test-of-none-union="warn"
+unsound-assignment="warn"
+unsound-return="warn"

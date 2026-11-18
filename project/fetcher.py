@@ -64,5 +64,5 @@ class Fetcher:
 
     def need_refetch(self) -> bool:
         stop=self.get_current_stop()
-        return (stop not in self.last_fetch
-                or (time.ticks_ms()-self.last_fetch[stop])>=60_000)
+        return bool(stop not in self.last_fetch
+                    or (time.ticks_ms()-self.last_fetch[stop])>=60_000)

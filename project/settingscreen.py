@@ -25,7 +25,7 @@ class SettingsScreen:
  
         
         saved = self.savesystem.load()
-        if saved:
+        if saved is not None:
             self.settings.from_savable_format(saved)
  
         self.container = lv.obj(self.tile)
@@ -121,7 +121,7 @@ class SettingsScreen:
  
     def _on_reset_clicked(self, event):
         saved = self.savesystem.load()
-        if saved:
+        if saved is not None:
             self.settings.from_savable_format(saved)
             self._sync_dropdowns()
             self._update_status()

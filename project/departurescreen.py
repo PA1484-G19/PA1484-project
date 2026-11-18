@@ -44,12 +44,12 @@ class DepartureScreen:
             return
 
         self.current_stop_label.set_text(self.data.stop_get_name(stop_id))
-        self.transport_mode_label.set_text(mode if mode else "All")
+        self.transport_mode_label.set_text(mode if mode is not None else "All")
 
         departures = self.data.stop_get_departures_info(stop_id)
 
         # No mode selected (or "All") means don't filter
-        if mode and mode != "All":
+        if mode is not None and mode != "All":
             departures = [d for d in departures if d.transport_mode == mode]
 
         if not departures:
