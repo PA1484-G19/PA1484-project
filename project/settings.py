@@ -2,9 +2,6 @@
 
 import json
 
-
-# Get type checking without running the import: (typing is missing from MicroPython and avoids possible
-# circular imports)
 TYPE_CHECKING=False
 if TYPE_CHECKING:
     from typing import Callable

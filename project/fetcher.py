@@ -8,11 +8,7 @@ from Data import TransportMode, DepartureInfo, datetime
 from debug_log import log
 TYPE_CHECKING=False
 if TYPE_CHECKING:
-    from dataclasses import dataclass
     from typing import Callable
-else:
-    def dataclass(cls):
-        return cls
 
 class Fetcher:
     net_tranport_mode_to_transport_mode={
@@ -23,7 +19,6 @@ class Fetcher:
 
     date_pattern=re.compile(r'(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d):\d\d')
 
-    @dataclass
     class NetworkStatus:
         last_fetch: int
         active: bool

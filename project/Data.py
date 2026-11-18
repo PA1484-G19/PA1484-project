@@ -1,27 +1,21 @@
-# dataclasses and typing is missing from micropython, so in runtime mock the imported stuff
 TYPE_CHECKING=False
 if TYPE_CHECKING:
-    from dataclasses import dataclass
     from typing import NewType
-    from datetime import datetime
 else:
-    def dataclass(cls):
-        return cls
     def NewType(_,type_):
         return type_
-    @dataclass
-    class datetime:
-        year: int
-        month: int
-        day: int
-        hour: int
-        minute: int
-        def __init__(self, year, month, day, hour, minute):
-            self.year=year
-            self.month=month
-            self.day=day
-            self.hour=hour
-            self.minute=minute
+class datetime:
+    year: int
+    month: int
+    day: int
+    hour: int
+    minute: int
+    def __init__(self, year, month, day, hour, minute):
+        self.year=year
+        self.month=month
+        self.day=day
+        self.hour=hour
+        self.minute=minute
 
 import requests # urequests for micropython
 import json
@@ -30,7 +24,6 @@ import karlskrona_stops
 TransportMode = NewType('TransportMode', str)
 StopID = karlskrona_stops.StopID
 
-@dataclass
 class DepartureInfo:
     departure_time: datetime
     line: str
