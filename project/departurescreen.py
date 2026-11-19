@@ -1,15 +1,13 @@
 import lvgl as lv
 
-# Type-only imports: MicroPython ignores annotations, so these are never run on the device
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from lvgl import obj as lv_obj_t
     from settings import Settings
     from data import Data
 
 
 class DepartureScreen:
-    def __init__(self, tile: lv_obj_t, settings: Settings, data: Data, refresh):
+    def __init__(self, tile, settings: Settings, data: Data, refresh):
         self.settings = settings
         self.data = data
 
@@ -46,12 +44,12 @@ class DepartureScreen:
             return
 
         self.current_stop_label.set_text(self.data.stop_get_name(stop_id))
-        self.transport_mode_label.set_text(mode if mode else "All")
+        self.transport_mode_label.set_text(mode if mode is not None else "All")
 
         departures = self.data.stop_get_departures_info(stop_id)
 
         # No mode selected (or "All") means don't filter
-        if mode and mode != "All":
+        if mode is not None and mode != "All":
             departures = [d for d in departures if d.transport_mode == mode]
 
         if not departures:

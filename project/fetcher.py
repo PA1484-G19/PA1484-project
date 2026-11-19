@@ -4,15 +4,12 @@ from secrets import WIFI_SSID, WIFI_PASSWORD, API_KEY
 import requests # urequests for micropython
 import json
 import re
-from Data import TransportMode, DepartureInfo, datetime
+from data import TransportMode, DepartureInfo, datetime
 from debug_log import log
 TYPE_CHECKING=False
 if TYPE_CHECKING:
-    from dataclasses import dataclass
-    from typing import Callable
-else:
-    def dataclass(cls):
-        return cls
+    from data import StopID
+    from typing import Callable, Any
 
 class Fetcher:
     net_tranport_mode_to_transport_mode={
@@ -23,7 +20,6 @@ class Fetcher:
 
     date_pattern=re.compile(r'(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d):\d\d')
 
-    @dataclass
     class NetworkStatus:
         last_fetch: int
         active: bool
@@ -31,7 +27,7 @@ class Fetcher:
             self.last_fetch=last_fetch
             self.active=active
 
-    def __init__(self,get_current_stop:Callable,on_refetch:Callable):
+    def __init__(self,get_current_stop:Callable[[],Any],on_refetch:Callable[[StopID,tuple[DepartureInfo,...]],Any]):
         self.last_fetch={}
         self.get_current_stop=get_current_stop
         self.on_refetch=on_refetch
@@ -59,14 +55,14 @@ class Fetcher:
             return
         self.last_fetch[stop]=time.ticks_ms()
         self.on_refetch(stop,tuple((DepartureInfo(
-            datetime(*(int(self.date_pattern.match(i['realtime']).group(j+1)) for j in range(5))),
+            (lambda match: datetime(*(int(match.group(j+1)) for j in range(5))))(self.date_pattern.match(i['realtime'])),
             i['route']['designation'],
             i['route']['destination']['name'],
             self.net_tranport_mode_to_transport_mode[i['route']['transport_mode']],
             'Canceled' if i['canceled'] else 'Delayed' if i['delay']>60 else 'On time',
             ) for i in out['departures'])))
 
-    def need_refetch(self):
+    def need_refetch(self) -> bool:
         stop=self.get_current_stop()
-        return (stop not in self.last_fetch
-                or (time.ticks_ms()-self.last_fetch[stop])>=60_000)
+        return bool(stop not in self.last_fetch
+                    or (time.ticks_ms()-self.last_fetch[stop])>=60_000)
