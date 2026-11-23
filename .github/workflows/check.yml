@@ -1,0 +1,25 @@
+name: Type checkinkg
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+
+
+permissions:
+  contents: read
+
+jobs:
+    ty-type-check:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7.0.1
+            - uses: astral-sh/setup-uv@v10.3.3
+            - run: cat ./project/secrets_example.py > ./project/secrets.py
+            - run: echo "API_KEY=''" >> ./project/secrets.py
+            - run: uv venv
+            - run: uv pip install ty
+            - run: PATH=$PATH:./.venv/bin/ make check
+
