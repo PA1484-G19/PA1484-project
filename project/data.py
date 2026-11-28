@@ -3,7 +3,7 @@ if TYPE_CHECKING:
     from typing import NewType
 else:
 
-    def NewType(_, type_):
+    def NewType(_, type_: type) -> type:
         return type_
 
 
@@ -14,7 +14,7 @@ class datetime:
     hour: int
     minute: int
 
-    def __init__(self, year, month, day, hour, minute):
+    def __init__(self, year: int, month: int, day: int, hour: int, minute: int):
         self.year = year
         self.month = month
         self.day = day
@@ -36,7 +36,12 @@ class DepartureInfo:
     departure_status: str
 
     def __init__(
-        self, departure_time, line, destination, transport_mode, departure_status
+        self,
+        departure_time: datetime,
+        line: str,
+        destination: str,
+        transport_mode: TransportMode,
+        departure_status: str,
     ):
         self.departure_time = departure_time
         self.line = line

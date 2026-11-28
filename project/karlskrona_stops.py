@@ -3,7 +3,7 @@ if TYPE_CHECKING:
     from typing import NewType
 else:
 
-    def NewType(_, type_):
+    def NewType(_, type_: type) -> type:
         return type_
 
 

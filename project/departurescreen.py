@@ -2,12 +2,16 @@ import lvgl as lv
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from data import Data
     from settings import Settings
 
 
 class DepartureScreen:
-    def __init__(self, tile, settings: Settings, data: Data, refresh):
+    def __init__(
+        self, tile: lv.obj, settings: Settings, data: Data, refresh: Callable[[], None]
+    ):
         self.settings = settings
         self.data = data
 
@@ -24,7 +28,7 @@ class DepartureScreen:
         self.refresh_btn = lv.button(tile)
         lv.label(self.refresh_btn).set_text('Refresh')
         self.refresh_btn.align(lv.ALIGN.TOP_RIGHT, -16, 16)
-        self.refresh_btn.add_event_cb(lambda event: refresh(), lv.EVENT.CLICKED, None)
+        self.refresh_btn.add_event_cb(lambda _event: refresh(), lv.EVENT.CLICKED, None)
 
         self.settings_has_changed()
 

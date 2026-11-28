@@ -2,7 +2,7 @@ import lvgl as lv
 
 
 class TitleScreen:
-    def __init__(self, tile):
+    def __init__(self, tile: lv.obj):
         # If this doesn't fit the ESP32 screen resolution, adjust the values
 
         project_name_label = lv.label(tile)

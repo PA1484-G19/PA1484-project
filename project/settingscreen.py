@@ -17,7 +17,7 @@ STATUS_REFRESH_MS = 2000
 class SettingsScreen:
     def __init__(
         self,
-        tile,
+        tile: lv.obj,
         data: Data,
         settings: Settings,
         savesystem: SaveSystem,
@@ -98,7 +98,7 @@ class SettingsScreen:
             seconds = time.ticks_diff(time.ticks_ms(), status.last_fetch) // 1000
             self.live_data_status_label.set_text('Live data: %d s ago' % seconds)
 
-    def _on_status_timer(self, timer):
+    def _on_status_timer(self, _timer):
         self._update_status()
 
     def _sync_dropdowns(self):
@@ -119,14 +119,14 @@ class SettingsScreen:
                 self.TRANSPORT_MODES.index(current_transport_mode)
             )
 
-    def _on_stop_changed(self, event):
+    def _on_stop_changed(self, _event):
         idx = self.stop_dropdown.get_selected()
         if idx == 0:
             return
         self.settings.set_current_stop(self.STOPS[idx - 1])
         self._update_status()
 
-    def _on_transport_changed(self, event):
+    def _on_transport_changed(self, _event):
         idx = self.transport_dropdown.get_selected()
         selected = self.TRANSPORT_MODES[idx]
         if selected == 'All':
@@ -134,10 +134,10 @@ class SettingsScreen:
         else:
             self.settings.set_current_transport_mode(selected)
 
-    def _on_save_clicked(self, event):
+    def _on_save_clicked(self, _event):
         self.savesystem.save(self.settings.to_savable_format())
 
-    def _on_reset_clicked(self, event):
+    def _on_reset_clicked(self, _event):
         saved = self.savesystem.load()
         if saved is not None:
             self.settings.from_savable_format(saved)
