@@ -6,19 +6,20 @@ class TitleScreen:
         # If this doesn't fit the ESP32 screen resolution, adjust the values
 
         project_name_label = lv.label(tile)
-        project_name_label.set_text("Project name: Transit go pro")
+        project_name_label.set_text('Project name: Transit go pro')
         project_name_label.align(lv.ALIGN.TOP_LEFT, 50, 50)
 
         version_label = lv.label(tile)
-        version_label.set_text("Program version: 1.0")
+        version_label.set_text('Program version: 1.0')
         version_label.align(lv.ALIGN.TOP_LEFT, 50, 80)
 
         group_label = lv.label(tile)
-        group_label.set_text("Group number: 19 & members:")
+        group_label.set_text('Group number: 19 & members:')
         group_label.align(lv.ALIGN.CENTER, 0, -20)
 
         members_text = lv.label(tile)
         members_text.align(lv.ALIGN.CENTER, 0, 10)
         members_text.set_text(
-            "Mahmoud Soufi, Tamas Dagany, Khaled Rukaia, Erik Fröjdh, Kith Ssekabira")
+            'Mahmoud Soufi, Tamas Dagany, Khaled Rukaia, Erik Fröjdh, Kith Ssekabira'
+        )
         members_text.set_width(350)
