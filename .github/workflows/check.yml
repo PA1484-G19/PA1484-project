@@ -45,3 +45,10 @@ jobs:
             - run: uv venv
             - run: uv pip install ruff
             - run: PATH=$PATH:./.venv/bin/ make check-format
+    micropython-check-syntax:
+        name: Syntax checking (micropython)
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7.0.1
+            - run: sudo apt install -y micropython
+            - run: find project/ -name '*.py'|xargs -I. micropython -X compile-only .
