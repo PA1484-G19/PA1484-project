@@ -9,3 +9,9 @@ ignore = [
     "UP031",   # % for str formatting is acceptable
     "RUF012",  # Mutable default attribute is acceptable
 ]
+extend-select = [
+    "ANN", # Require type annotations for (most) arguments/returns
+]
+[lint.flake8-annotations]
+suppress-dummy-args = true
+suppress-none-returning = true
