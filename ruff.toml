@@ -1,0 +1,11 @@
+target-version = "py314"
+
+[format]
+quote-style = "single"
+
+[lint]
+ignore = [
+    "PLC3002", # Don't inline lambda
+    "UP031",   # % for str formatting is acceptable
+    "RUF012",  # Mutable default attribute is acceptable
+]
