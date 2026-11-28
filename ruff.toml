@@ -11,6 +11,7 @@ ignore = [
 ]
 extend-select = [
     "ANN", # Require type annotations for (most) arguments/returns
+    "ARG", # Require no (non _-ed) unused arguments
 ]
 [lint.flake8-annotations]
 suppress-dummy-args = true
