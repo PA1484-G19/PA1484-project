@@ -2,15 +2,18 @@
 
 import json
 
-TYPE_CHECKING=False
+TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Callable, Any
+    from collections.abc import Callable
+    from typing import Any
+
     from data import StopID, TransportMode
+
 
 class Settings:
     """Holds the current settings and calls a callback whenever they change."""
 
-    def __init__(self, to_be_called_on_settings_change: Callable[[],Any]):
+    def __init__(self, to_be_called_on_settings_change: Callable[[], Any]):
         self._on_change = to_be_called_on_settings_change
         self._stop = None
         self._transport_mode = None
@@ -29,7 +32,7 @@ class Settings:
 
     def to_savable_format(self) -> bytes:
         return json.dumps(
-            {"stop": self._stop, "transport_mode": self._transport_mode}
+            {'stop': self._stop, 'transport_mode': self._transport_mode}
         ).encode()
 
     def from_savable_format(self, save: bytes | None):
@@ -38,13 +41,14 @@ class Settings:
             return
         try:
             record = json.loads(save.decode())
-            stop = record.get("stop")
-            transport = record.get("transport_mode")
-        except (AttributeError, ValueError):
+            stop = record.get('stop')
+            transport = record.get('transport_mode')
+        except tuple(AttributeError, ValueError):  # ty: ignore[no-matching-overload]
             return
         # StopID is an int and TransportMode a str in the agreed Data design.
-        if ((stop is None or type(stop) is int) and
-                (transport is None or type(transport) is str)):
+        if (stop is None or type(stop) is int) and (
+            transport is None or type(transport) is str
+        ):
             self._update(stop, transport)
 
     def _update(self, stop: StopID | None, transport: TransportMode | None):

@@ -6,5 +6,5 @@ excluded by .gitignore so your credentials are never committed.
 The T4-S3 cannot connect to eduroam. Use another network or a phone hotspot.
 """
 
-WIFI_SSID      = "SSID"
-WIFI_PASSWORD  = "PWD"
+WIFI_SSID = 'SSID'
+WIFI_PASSWORD = 'PWD'

@@ -1,125 +1,143 @@
-import lvgl as lv
 import time
 
-TYPE_CHECKING=False
+import lvgl as lv
+
+TYPE_CHECKING = False
 if TYPE_CHECKING:
     from data import Data
-    from settings import Settings
-    from savesystem import SaveSystem
     from fetcher import Fetcher
- 
-Button = getattr(lv, "button", None) or lv.btn
+    from savesystem import SaveSystem
+    from settings import Settings
+
+Button = getattr(lv, 'button', None) or lv.btn
 
 STATUS_REFRESH_MS = 2000
- 
+
+
 class SettingsScreen:
-    def __init__(self, tile, data: Data, settings: Settings, savesystem: SaveSystem, fetcher: Fetcher):
+    def __init__(
+        self,
+        tile: lv.obj,
+        data: Data,
+        settings: Settings,
+        savesystem: SaveSystem,
+        fetcher: Fetcher,
+    ):
         self.tile = tile
         self.data = data
         self.settings = settings
         self.savesystem = savesystem
         self.fetcher = fetcher
- 
+
         self.STOPS = data.get_stops()
-        self.TRANSPORT_MODES = list(data.get_transport_modes()) + ["All"]
- 
-        
+        self.TRANSPORT_MODES = list(data.get_transport_modes()) + ['All']
+
         saved = self.savesystem.load()
         if saved is not None:
             self.settings.from_savable_format(saved)
- 
+
         self.container = lv.obj(self.tile)
         self.container.set_size(lv.pct(90), lv.pct(90))
         self.container.center()
         self.container.set_flex_flow(lv.FLEX_FLOW.COLUMN)
- 
+
         title = lv.label(self.container)
-        title.set_text("Settings")
- 
+        title.set_text('Settings')
+
         stop_label = lv.label(self.container)
-        stop_label.set_text("Select Stop:")
+        stop_label.set_text('Select Stop:')
         self.stop_dropdown = lv.dropdown(self.container)
-        self.stop_dropdown.set_options("\n".join(["Select a stop..."] + [self.data.stop_get_name(stop) for stop in self.STOPS]))
+        self.stop_dropdown.set_options(
+            '\n'.join(
+                ['Select a stop...']
+                + [self.data.stop_get_name(stop) for stop in self.STOPS]
+            )
+        )
         self.stop_dropdown.add_event_cb(
-            self._on_stop_changed, lv.EVENT.VALUE_CHANGED, None)
- 
+            self._on_stop_changed, lv.EVENT.VALUE_CHANGED, None
+        )
+
         transport_label = lv.label(self.container)
-        transport_label.set_text("Select Transport:")
+        transport_label.set_text('Select Transport:')
         self.transport_dropdown = lv.dropdown(self.container)
-        self.transport_dropdown.set_options("\n".join(self.TRANSPORT_MODES))
+        self.transport_dropdown.set_options('\n'.join(self.TRANSPORT_MODES))
         self.transport_dropdown.add_event_cb(
-            self._on_transport_changed, lv.EVENT.VALUE_CHANGED, None)
- 
+            self._on_transport_changed, lv.EVENT.VALUE_CHANGED, None
+        )
+
         self.save_btn = Button(self.container)
-        lv.label(self.save_btn).set_text("Save as Default")
-        self.save_btn.add_event_cb(
-            self._on_save_clicked, lv.EVENT.CLICKED, None)
- 
+        lv.label(self.save_btn).set_text('Save as Default')
+        self.save_btn.add_event_cb(self._on_save_clicked, lv.EVENT.CLICKED, None)
+
         self.reset_btn = Button(self.container)
-        lv.label(self.reset_btn).set_text("Reset")
-        self.reset_btn.add_event_cb(
-            self._on_reset_clicked, lv.EVENT.CLICKED, None)
+        lv.label(self.reset_btn).set_text('Reset')
+        self.reset_btn.add_event_cb(self._on_reset_clicked, lv.EVENT.CLICKED, None)
 
         self.wifi_status_label = lv.label(self.container)
         self.live_data_status_label = lv.label(self.container)
- 
+
         self._sync_dropdowns()
         self._update_status()
 
         # LVGL 9 timer: calls _on_status_timer(timer) every STATUS_REFRESH_MS.
         # Kept on self so the timer is not garbage collected.
         self.status_timer = lv.timer_create(
-            self._on_status_timer, STATUS_REFRESH_MS, None)
+            self._on_status_timer, STATUS_REFRESH_MS, None
+        )
 
     def _update_status(self):
         """Show the Wi-Fi state and how old the selected stop's live data is."""
         status = self.fetcher.status()
         self.wifi_status_label.set_text(
-            "Wi-Fi: Connected" if status.active else "Wi-Fi: Disconnected")
+            'Wi-Fi: Connected' if status.active else 'Wi-Fi: Disconnected'
+        )
 
         if status.last_fetch == -1:
-            self.live_data_status_label.set_text("Live data: No data yet")
+            self.live_data_status_label.set_text('Live data: No data yet')
         else:
             seconds = time.ticks_diff(time.ticks_ms(), status.last_fetch) // 1000
-            self.live_data_status_label.set_text("Live data: %d s ago" % seconds)
+            self.live_data_status_label.set_text('Live data: %d s ago' % seconds)
 
-    def _on_status_timer(self, timer):
+    def _on_status_timer(self, _timer):
         self._update_status()
- 
+
     def _sync_dropdowns(self):
         """Set the dropdown selections so they match the current settings."""
         stop = self.settings.get_current_stop()
         if stop in self.STOPS:
             self.stop_dropdown.set_selected(self.STOPS.index(stop) + 1)
         elif stop is None:
-            self.stop_dropdown.set_selected(0)  # Default to the first stop if none is set.
+            self.stop_dropdown.set_selected(
+                0
+            )  # Default to the first stop if none is set.
 
-        current_transport_mode=self.settings.get_current_transport_mode()
+        current_transport_mode = self.settings.get_current_transport_mode()
         if current_transport_mode is None:
-            self.transport_dropdown.set_selected(self.TRANSPORT_MODES.index("All"))
+            self.transport_dropdown.set_selected(self.TRANSPORT_MODES.index('All'))
         elif self.settings.get_current_transport_mode() in self.TRANSPORT_MODES:
             self.transport_dropdown.set_selected(
-                self.TRANSPORT_MODES.index(current_transport_mode))
- 
-    def _on_stop_changed(self, event):
+                self.TRANSPORT_MODES.index(current_transport_mode)
+            )
+
+    def _on_stop_changed(self, _event):
         idx = self.stop_dropdown.get_selected()
         if idx == 0:
             return
         self.settings.set_current_stop(self.STOPS[idx - 1])
         self._update_status()
- 
-    def _on_transport_changed(self, event):
+
+    def _on_transport_changed(self, _event):
         idx = self.transport_dropdown.get_selected()
         selected = self.TRANSPORT_MODES[idx]
-        if selected == "All":
+        if selected == 'All':
             self.settings.set_current_transport_mode(None)
         else:
             self.settings.set_current_transport_mode(selected)
- 
-    def _on_save_clicked(self, event):
+
+    def _on_save_clicked(self, _event):
         self.savesystem.save(self.settings.to_savable_format())
- 
-    def _on_reset_clicked(self, event):
+
+    def _on_reset_clicked(self, _event):
         saved = self.savesystem.load()
         if saved is not None:
             self.settings.from_savable_format(saved)
