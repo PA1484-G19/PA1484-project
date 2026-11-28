@@ -59,10 +59,10 @@ stops={
     StopID(740031799):'Stationsvägen Slottsbacken',
     StopID(740031796):'Annebo',
     StopID(740001537):'Bergåsa station',
-    StopID(740031888):'Galgamarkstrappan', #
-    StopID(740031887):'Kvarngatan', #
+    StopID(740031888):'Galgamarkstrappan',
+    StopID(740031887):'Kvarngatan',
     StopID(740023372):'Karlskrona centrum',
-    StopID(740031801):'Bastasjö', #
+    StopID(740031801):'Bastasjö',
     StopID(740031802):'Norra Hässlegården',
     StopID(740031803):'Hässlegårdens förskola',
     StopID(740031805):'Södra Hässlegården',
@@ -79,21 +79,21 @@ stops={
     StopID(740031868):'Hultvägen',
     StopID(740031863):'Gullberna station',
     StopID(740031886):'Karlskrona Angöringen',
-    StopID(740031859):'Uranvägen Torskors', #
-    StopID(740011646):'Torskors', #
-    StopID(740032009):'Berget', #
-    StopID(740031823):'Ankaret', #
+    StopID(740031859):'Uranvägen Torskors',
+    StopID(740011646):'Torskors',
+    StopID(740032009):'Berget',
+    StopID(740031823):'Ankaret',
     StopID(740031784):'Sunnadal',
     StopID(740031783):'Lindesnäs',
     StopID(740032108):'Rosenholm',
-    StopID(740032192):'NKT Arena Karlskrona', #
-    StopID(740032087):'Silleboda', #
-    StopID(740032092):'Karlsgärde', #
-    StopID(740032091):'Skönstavik', #
-    StopID(740024915):'Karlskrona Mariedal Motellet', #
-    StopID(740022976):'Verkö färjeterminalen', #
-    StopID(740031842):'Roxtec Verkö', #
-    StopID(740031841):'Toras väg', #
+    StopID(740032192):'NKT Arena Karlskrona',
+    StopID(740032087):'Silleboda',
+    StopID(740032092):'Karlsgärde',
+    StopID(740032091):'Skönstavik',
+    StopID(740024915):'Karlskrona Mariedal Motellet',
+    StopID(740022976):'Verkö färjeterminalen',
+    StopID(740031842):'Roxtec Verkö',
+    StopID(740031841):'Toras väg',
     StopID(740031840):'Verkö',
     StopID(740031839):'Ängholmen',
     StopID(740031838):'Södra Ringö',
@@ -101,24 +101,24 @@ stops={
     StopID(740031869):'Knösö',
     StopID(740031835):'Ga Riksvägen',
     StopID(740031834):'Ekedalsvägen',
-    StopID(740031844):'NKT Verkö', #
-    StopID(740031879):'Långö', #
-    StopID(740031880):'Lagmansgatan', #
-    StopID(740031881):'Egilslunden', #
-    StopID(740031877):'Tullparken', #
-    StopID(740031849):'Hästö', #
-    StopID(740031848):'Herrgårdsvägen', #
-    StopID(740031847):'Hästö idrottsplats', #
-    StopID(740032976):'Wämöparken', #
-    StopID(740024365):'Sjukhuset huvudentrén', #
-    StopID(740031832):'Hälsovägen', #
-    StopID(740031831):'Kyrkogården', #
+    StopID(740031844):'NKT Verkö',
+    StopID(740031879):'Långö',
+    StopID(740031880):'Lagmansgatan',
+    StopID(740031881):'Egilslunden',
+    StopID(740031877):'Tullparken',
+    StopID(740031849):'Hästö',
+    StopID(740031848):'Herrgårdsvägen',
+    StopID(740031847):'Hästö idrottsplats',
+    StopID(740032976):'Wämöparken',
+    StopID(740024365):'Sjukhuset huvudentrén',
+    StopID(740031832):'Hälsovägen',
+    StopID(740031831):'Kyrkogården',
 
     # Anna stopp
-    StopID(740031997):'Mariefors', #
-    StopID(740011100):'Mölletorp', #
-    StopID(740031996):'Augerums kyrka', #
-    StopID(740010009):'Allatorps gård', #
-    StopID(740011253):'Allatorp', #
-    StopID(740032109):'Allévägen', #
+    StopID(740031997):'Mariefors',
+    StopID(740011100):'Mölletorp',
+    StopID(740031996):'Augerums kyrka',
+    StopID(740010009):'Allatorps gård',
+    StopID(740011253):'Allatorp',
+    StopID(740032109):'Allévägen',
 }

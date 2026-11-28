@@ -1,13 +1,13 @@
 import lvgl as lv
 from board_lvgl import start_board
-
+from data import Data
+from departurescreen import DepartureScreen
+from fetcher import Fetcher
 from savesystem import SaveSystem
 from settings import Settings
-from departurescreen import DepartureScreen
-from titlescreen import TitleScreen
 from settingscreen import SettingsScreen
-from data import Data
-from fetcher import Fetcher
+from titlescreen import TitleScreen
+
 
 class App:
     def __init__(self):

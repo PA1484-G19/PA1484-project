@@ -17,8 +17,6 @@ class datetime:
         self.hour=hour
         self.minute=minute
 
-import requests # urequests for micropython
-import json
 import karlskrona_stops
 
 TransportMode = NewType('TransportMode', str)

@@ -2,8 +2,8 @@ import lvgl as lv
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from settings import Settings
     from data import Data
+    from settings import Settings
 
 
 class DepartureScreen:
@@ -57,8 +57,6 @@ class DepartureScreen:
             return
 
         for dep in departures:
-            time_str = "{:02d}:{:02d}".format(
-                dep.departure_time.hour, dep.departure_time.minute)
+            time_str = f"{dep.departure_time.hour:02d}:{dep.departure_time.minute:02d}"
             self.departure_list.add_text(
-                "{} - {} - {} - {} - {}".format(
-                    time_str, dep.destination, dep.line, dep.transport_mode, dep.departure_status))
+                f"{time_str} - {dep.destination} - {dep.line} - {dep.transport_mode} - {dep.departure_status}")

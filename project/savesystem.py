@@ -2,7 +2,6 @@
 
 from debug_log import log
 
-
 # A file on the board's FAT flash filesystem, beside main.py. It survives
 # reboots and power loss; flashing the Python application again resets it.
 SAVE_PATH = "/settings.dat"

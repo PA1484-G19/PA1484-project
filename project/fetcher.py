@@ -1,15 +1,19 @@
-import network
-import time
-from secrets import WIFI_SSID, WIFI_PASSWORD, API_KEY
-import requests # urequests for micropython
 import json
 import re
-from data import TransportMode, DepartureInfo, datetime
+import time
+from secrets import API_KEY, WIFI_PASSWORD, WIFI_SSID
+
+import network
+import requests  # urequests for micropython
+from data import DepartureInfo, TransportMode, datetime
 from debug_log import log
+
 TYPE_CHECKING=False
 if TYPE_CHECKING:
+    from collections.abc import Callable
+    from typing import Any
+
     from data import StopID
-    from typing import Callable, Any
 
 class Fetcher:
     net_tranport_mode_to_transport_mode={
@@ -54,13 +58,13 @@ class Fetcher:
             log('request error: %s'%(out['errorDetail']))
             return
         self.last_fetch[stop]=time.ticks_ms()
-        self.on_refetch(stop,tuple((DepartureInfo(
+        self.on_refetch(stop,tuple(DepartureInfo(
             (lambda match: datetime(*(int(match.group(j+1)) for j in range(5))))(self.date_pattern.match(i['realtime'])),
             i['route']['designation'],
             i['route']['destination']['name'],
             self.net_tranport_mode_to_transport_mode[i['route']['transport_mode']],
             'Canceled' if i['canceled'] else 'Delayed' if i['delay']>60 else 'On time',
-            ) for i in out['departures'])))
+            ) for i in out['departures']))
 
     def need_refetch(self) -> bool:
         stop=self.get_current_stop()

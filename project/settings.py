@@ -4,7 +4,9 @@ import json
 
 TYPE_CHECKING=False
 if TYPE_CHECKING:
-    from typing import Callable, Any
+    from collections.abc import Callable
+    from typing import Any
+
     from data import StopID, TransportMode
 
 class Settings:

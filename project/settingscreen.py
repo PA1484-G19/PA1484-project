@@ -1,12 +1,13 @@
-import lvgl as lv
 import time
+
+import lvgl as lv
 
 TYPE_CHECKING=False
 if TYPE_CHECKING:
     from data import Data
-    from settings import Settings
-    from savesystem import SaveSystem
     from fetcher import Fetcher
+    from savesystem import SaveSystem
+    from settings import Settings
  
 Button = getattr(lv, "button", None) or lv.btn
 

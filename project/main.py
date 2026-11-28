@@ -1,7 +1,7 @@
-from debug_log import log
 import sys
 
 from app import App
+from debug_log import log
 
 app: App
 
