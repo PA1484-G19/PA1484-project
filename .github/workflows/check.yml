@@ -1,4 +1,4 @@
-name: Type checkinkg
+name: Checkinkg
 on:
   push:
     branches:
@@ -13,6 +13,7 @@ permissions:
 
 jobs:
     ty-type-check:
+        name: Type checking (ty)
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v7.0.1
@@ -22,4 +23,25 @@ jobs:
             - run: uv venv
             - run: uv pip install ty
             - run: PATH=$PATH:./.venv/bin/ make check
-
+    ruff-lint-check:
+        name: Linting (ruff)
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7.0.1
+            - uses: astral-sh/setup-uv@v10.3.3
+            - run: cat ./project/secrets_example.py > ./project/secrets.py
+            - run: echo "API_KEY=''" >> ./project/secrets.py
+            - run: uv venv
+            - run: uv pip install ruff
+            - run: PATH=$PATH:./.venv/bin/ make lint
+    ruff-format-check:
+        name: Format checking (ruff)
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7.0.1
+            - uses: astral-sh/setup-uv@v10.3.3
+            - run: cat ./project/secrets_example.py > ./project/secrets.py
+            - run: echo "API_KEY=''" >> ./project/secrets.py
+            - run: uv venv
+            - run: uv pip install ruff
+            - run: PATH=$PATH:./.venv/bin/ make check-format
