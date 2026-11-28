@@ -43,7 +43,7 @@ class Settings:
             record = json.loads(save.decode())
             stop = record.get('stop')
             transport = record.get('transport_mode')
-        except AttributeError, ValueError:
+        except tuple(AttributeError, ValueError):  # ty: ignore[no-matching-overload]
             return
         # StopID is an int and TransportMode a str in the agreed Data design.
         if (stop is None or type(stop) is int) and (
